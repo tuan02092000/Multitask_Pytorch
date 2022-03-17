@@ -17,6 +17,7 @@ from random import randrange
 import torch.nn.functional as F
 from sklearn.metrics import f1_score
 from torch.autograd import Variable
+import matplotlib.pyplot as plt
 
 import pandas as pd
 import numpy as np

@@ -4,7 +4,7 @@ resize = 224
 mean = (0.485, 0.456, 0.406)
 std = (0.229, 0.224, 0.225)
 
-num_epochs = 10
+num_epochs = 20
 
 input_size = 64
 
@@ -32,3 +32,5 @@ label_dict = {
     'red': [0, 0, 1, 0],
     'green': [0, 0, 0, 1]
 }
+
+name_graph = ['0', '1', '2', '3', '4']
