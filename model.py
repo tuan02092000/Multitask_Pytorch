@@ -1,24 +1,5 @@
 from config import *
 
-########## Model
-# model_ft = models.resnet50(pretrained=True)  # resnet50
-# model_ft = models.resnet101(pretrained=True)
-# for param in model_ft.parameters():
-#     param.requires_grad = False
-# print(model_ft)
-#
-# num_ftrs = model_ft.fc.in_features
-# model_ft.fc = nn.Linear(num_ftrs, 512)
-
-
-# model_ft = models.vgg16(pretrained=True)  # vgg16
-# for param in model_ft.parameters():
-#     param.requires_grad = False
-# print(model_ft)
-#
-# num_ftrs = model_ft.classifier[6].in_features
-# model_ft.classifier[6] = nn.Linear(num_ftrs, 512)
-
 class MultiOutputModel(torch.nn.Module):
     def __init__(self):
         super(MultiOutputModel, self).__init__()
@@ -49,11 +30,11 @@ class MultiOutputModel(torch.nn.Module):
 
         # heads
         y1o = F.softmax(self.y1o(x1), dim=1)
-        y2o = F.softmax(self.y2o(x1), dim=1)  # should be sigmoid
+        y2o = F.softmax(self.y2o(x1), dim=1)
 
         return y1o, y2o
     def model_core(self):
-        model_ft = models.resnet101(pretrained=True)
+        model_ft = models.resnet152(pretrained=True)  # Choose your model backbone
         for param in model_ft.parameters():
             param.requires_grad = False
         # Fine tuning

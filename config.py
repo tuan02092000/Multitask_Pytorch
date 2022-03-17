@@ -13,7 +13,7 @@ batch_size = 64
 val_ratio = 0.2
 
 traffic = ['bus', 'car', 'truck']
-color = ['black', 'white', 'red', 'green']
+color = ['black', 'white', 'red', 'green', 'other']
 
 num_traffic = 3
 num_color = 4
@@ -27,10 +27,11 @@ label_dict = {
     'bus': [1, 0, 0],
     'car': [0, 1, 0],
     'truck': [0, 0, 1],
-    'black': [1, 0, 0, 0],
-    'white': [0, 1, 0, 0],
-    'red': [0, 0, 1, 0],
-    'green': [0, 0, 0, 1]
+    'black': [1, 0, 0, 0, 0],
+    'white': [0, 1, 0, 0, 0],
+    'red': [0, 0, 1, 0, 0],
+    'green': [0, 0, 0, 1, 0],
+    'other': [0, 0, 0, 0, 1]
 }
 
 name_graph = ['0', '1', '2', '3', '4']

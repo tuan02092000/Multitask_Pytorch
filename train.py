@@ -61,8 +61,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=num_epochs):
 
 
     for epoch in range(num_epochs):
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-        print('-' * 50)
+        print('\nEpoch {}/{}'.format(epoch, num_epochs - 1))
+        print('-' * 100)
 
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
@@ -147,8 +147,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=num_epochs):
 # Train and validation model
 model_ft1, history = train_model(model_1, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
 # Save model
-save_model(model_ft1, 'resnet101_2.pth')
+save_model(model_ft1, 'resnet152.pth')
 
 # Plot graph
-plot_history_graph(history, 'resnet101', name_graph)
+plot_history_graph(history, 'resnet152', name_graph)
 
