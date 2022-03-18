@@ -112,17 +112,17 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=num_epochs):
             color_acc = color_corrects.double() / dataset_sizes[phase]
 
             if phase == 'train':
-                history['train_loss'].append(loss)
-                history['traffic_train_loss'].append(loss0)
-                history['color_train_loss'].append(loss1)
-                history['traffic_train_acc'].append(traffic_acc)
-                history['color_train_acc'].append(color_acc)
+                history['train_loss'].append(loss.item())
+                history['traffic_train_loss'].append(loss0.item())
+                history['color_train_loss'].append(loss1.item())
+                history['traffic_train_acc'].append(traffic_acc.item())
+                history['color_train_acc'].append(color_acc.item())
             else:
-                history['val_loss'].append(loss)
-                history['traffic_val_loss'].append(loss0)
-                history['color_val_loss'].append(loss1)
-                history['traffic_val_acc'].append(traffic_acc)
-                history['color_val_acc'].append(color_acc)
+                history['val_loss'].append(loss.item())
+                history['traffic_val_loss'].append(loss0.item())
+                history['color_val_loss'].append(loss1.item())
+                history['traffic_val_acc'].append(traffic_acc.item())
+                history['color_val_acc'].append(color_acc.item())
 
             print(
                 '\n[{}] / Total_loss: {:.4f} / Traffic_loss: {:.4f} / Color_loss {:.4f}'.format(phase, loss, loss0, loss1))
@@ -147,8 +147,8 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=num_epochs):
 # Train and validation model
 model_ft1, history = train_model(model_1, criterion, optimizer_ft, exp_lr_scheduler, num_epochs=num_epochs)
 # Save model
-save_model(model_ft1, 'resnet152.pth')
+save_model(model_ft1, 'resnet152_1.pth')
 
 # Plot graph
-plot_history_graph(history, 'resnet152', name_graph)
+plot_history_graph(history, 'resnet152_1', name_graph)
 
