@@ -1,8 +1,0 @@
-val / Epoch 0/7 / Traffic_loss: 0.1716 / Color_loss: 0.3822 / Epoch_acc: 0.8790 / Traffic_acc: 0.9570 / Color_acc: 0.9083
-val / Epoch 1/7 / Traffic_loss: 0.1650 / Color_loss: 0.3484 / Epoch_acc: 0.9036 / Traffic_acc: 0.9647 / Color_acc: 0.9255
-val / Epoch 2/7 / Traffic_loss: 0.1758 / Color_loss: 0.3493 / Epoch_acc: 0.9169 / Traffic_acc: 0.9660 / Color_acc: 0.9380
-val / Epoch 3/7 / Traffic_loss: 0.1488 / Color_loss: 0.3485 / Epoch_acc: 0.9165 / Traffic_acc: 0.9669 / Color_acc: 0.9367
-val / Epoch 4/7 / Traffic_loss: 0.1437 / Color_loss: 0.3217 / Epoch_acc: 0.9182 / Traffic_acc: 0.9694 / Color_acc: 0.9363
-val / Epoch 5/7 / Traffic_loss: 0.1570 / Color_loss: 0.3366 / Epoch_acc: 0.9178 / Traffic_acc: 0.9621 / Color_acc: 0.9432
-val / Epoch 6/7 / Traffic_loss: 0.1153 / Color_loss: 0.3401 / Epoch_acc: 0.9225 / Traffic_acc: 0.9716 / Color_acc: 0.9380
-val / Epoch 7/7 / Traffic_loss: 0.1301 / Color_loss: 0.3158 / Epoch_acc: 0.9255 / Traffic_acc: 0.9712 / Color_acc: 0.9419

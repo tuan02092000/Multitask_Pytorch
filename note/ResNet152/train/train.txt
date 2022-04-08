@@ -1,8 +1,0 @@
-train / Epoch 0/7 / Traffic_loss: 0.1515 / Color_loss: 0.3834 / Epoch_acc: 0.7576 / Traffic_acc: 0.9098 / Color_acc: 0.8147
-train / Epoch 1/7 / Traffic_loss: 0.0630 / Color_loss: 0.2278 / Epoch_acc: 0.8878 / Traffic_acc: 0.9588 / Color_acc: 0.9228
-train / Epoch 2/7 / Traffic_loss: 0.1236 / Color_loss: 0.1887 / Epoch_acc: 0.9021 / Traffic_acc: 0.9630 / Color_acc: 0.9338
-train / Epoch 3/7 / Traffic_loss: 0.1789 / Color_loss: 0.2358 / Epoch_acc: 0.9159 / Traffic_acc: 0.9692 / Color_acc: 0.9426
-train / Epoch 4/7 / Traffic_loss: 0.0585 / Color_loss: 0.1166 / Epoch_acc: 0.9297 / Traffic_acc: 0.9740 / Color_acc: 0.9519
-train / Epoch 5/7 / Traffic_loss: 0.1151 / Color_loss: 0.0891 / Epoch_acc: 0.9307 / Traffic_acc: 0.9741 / Color_acc: 0.9529
-train / Epoch 6/7 / Traffic_loss: 0.0889 / Color_loss: 0.1024 / Epoch_acc: 0.9327 / Traffic_acc: 0.9742 / Color_acc: 0.9555
-train / Epoch 7/7 / Traffic_loss: 0.0598 / Color_loss: 0.0719 / Epoch_acc: 0.9461 / Traffic_acc: 0.9814 / Color_acc: 0.9621
