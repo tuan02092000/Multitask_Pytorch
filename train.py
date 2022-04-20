@@ -142,7 +142,7 @@ def train(model, dataloader_dict : dict, dataset_size : dict, criterion, optimzi
 
 if __name__ == '__main__':
     # Dataset
-    train_list, test_list = make_data_path_list('dataset')
+    train_list, test_list = make_data_path_list('dataset_8_4')
 
     train_dataset = MyDataset(train_list, transform=ImageTransform(resize, mean, std), phase='train')
     val_dataset = MyDataset(test_list, transform=ImageTransform(resize, mean, std), phase='val')
@@ -174,5 +174,5 @@ if __name__ == '__main__':
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
     # Training
-    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, 'Densenet_161', num_epochs)
+    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, 'Densenet', num_epochs)
 

@@ -33,6 +33,7 @@ class MyDataset(Dataset):
         return len(self.file_list[0])
     def __getitem__(self, item):
         img_path = self.file_list[0][item]
+        # print(img_path)
         img = Image.open(img_path).convert("RGB")
         if self.transform:
             img = self.transform(img, self.phase)
@@ -40,7 +41,7 @@ class MyDataset(Dataset):
         color_label = torch.from_numpy(np.array(color.index(self.file_list[2][item])))
         return img, type_label, color_label
 if __name__ == '__main__':
-    train_list, test_list = make_data_path_list('dataset')
+    train_list, test_list = make_data_path_list('dataset_8_4')
     print('Length train list: ', len(train_list[0]))
     print('Length test list', len(test_list[0]))
     for i in range(5):

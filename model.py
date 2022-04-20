@@ -185,7 +185,7 @@ class Resnet_BackBone(nn.Module):
         out_color = self.y2(x)
         return out_type, out_color
     def model_core(self):
-        model_ft = models.resnet50(pretrained=True)  # Choose your model backbone
+        model_ft = models.resnet152(pretrained=True)  # Choose your model backbone
         for param in model_ft.parameters():
             param.requires_grad = False
         num_ftrs = model_ft.fc.in_features
@@ -205,6 +205,7 @@ class SqueezeNet_BackBone(nn.Module):
             nn.Flatten(),
             nn.Linear(1000, num_type)
             )
+
         self.y2 = nn.Sequential(
             nn.Dropout(p=0.5, inplace=False),
             nn.Conv2d(512, 1000, kernel_size=(1, 1), stride=(1, 1)),
@@ -212,7 +213,7 @@ class SqueezeNet_BackBone(nn.Module):
             nn.AdaptiveAvgPool2d(output_size=(1, 1)),
             nn.Flatten(),
             nn.Linear(1000, num_color)
-        )
+            )
 
     def forward(self, x):
         x = self.base_model(x)
@@ -251,6 +252,32 @@ class Densenet_BackBone(nn.Module):
         model_ft.classifier = nn.Linear(num_ftrs, 512)
         return model_ft
 
+class VGG_BackBone(nn.Module):
+    def __init__(self):
+        super(VGG_BackBone, self).__init__()
+
+        self.base_model = self.model_core()
+
+        self.y1 = nn.Sequential(
+            nn.Linear(in_features=512, out_features=num_type, bias=True),
+        )
+        self.y2 = nn.Sequential(
+            nn.Linear(in_features=512, out_features=num_color, bias=True),
+        )
+
+    def forward(self, x):
+        x = self.base_model(x)
+        out_type = self.y1(x)
+        out_color = self.y2(x)
+        return out_type, out_color
+    def model_core(self):
+        model_ft = models.vgg19(pretrained=True)  # Choose your model backbone
+        for param in model_ft.parameters():
+            param.requires_grad = False
+        num_ftrs = model_ft.classifier[6].in_features
+        model_ft.classifier[6] = nn.Linear(num_ftrs, 512)
+        return model_ft
+
 if __name__ == '__main__':
     model = models.densenet161()
-    print(model)
+
