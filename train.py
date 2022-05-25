@@ -141,8 +141,11 @@ def train(model, dataloader_dict : dict, dataset_size : dict, criterion, optimzi
     # return model
 
 if __name__ == '__main__':
+    # Name model
+    name_model = 'SqueezeNet_1_1_25_5'
+
     # Dataset
-    train_list, test_list = make_data_path_list('dataset_8_4')
+    train_list, test_list = make_data_path_list('dataset_25_5')
 
     train_dataset = MyDataset(train_list, transform=ImageTransform(resize, mean, std), phase='train')
     val_dataset = MyDataset(test_list, transform=ImageTransform(resize, mean, std), phase='val')
@@ -156,7 +159,7 @@ if __name__ == '__main__':
     }
 
     # Model
-    model = Densenet_BackBone()
+    model = SqueezeNet_BackBone()
 
     # Loss function
     criterion = [nn.CrossEntropyLoss(), nn.CrossEntropyLoss()]
@@ -169,10 +172,10 @@ if __name__ == '__main__':
             {"params": model.y1.parameters(), "lr": lr_last},
             {"params": model.y2.parameters(), "lr": lr_last},
         ],
-        lr=lr_main)
+        lr=lr_main)  # fix momentum
     optimizer_ft = optimizer
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)  # fix step size
 
     # Training
-    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, 'Densenet', num_epochs)
+    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, name_model, num_epochs)
 

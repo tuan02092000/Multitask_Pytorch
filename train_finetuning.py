@@ -141,6 +141,9 @@ def train(model, dataloader_dict : dict, dataset_size : dict, criterion, optimzi
     # return model
 
 if __name__ == '__main__':
+    # Name model
+    name_model = 'MobileNet_v3_small'
+
     # Dataset
     train_list, test_list = make_data_path_list('dataset_8_4')
 
@@ -156,8 +159,8 @@ if __name__ == '__main__':
     }
 
     # Model
-    model = SqueezeNet_BackBone()
-    checkpoint = torch.load('weights/best_model_loss_SqueezeNet1_1.pth')
+    model = MobileNetV3_BackBone()
+    checkpoint = torch.load(f'weights/best_model_loss_{name_model}.pth')
     model.load_state_dict(checkpoint)
     for params in model.parameters():
         params.requires_grad = True
@@ -173,10 +176,10 @@ if __name__ == '__main__':
         #     {"params": model.y1.parameters(), "lr": lr_last},
         #     {"params": model.y2.parameters(), "lr": lr_last},
         # ],
-        model.parameters(), lr=1e-5)
+        model.parameters(), lr=1e-5)  # fix momentum
     optimizer_ft = optimizer
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=30, gamma=0.1) # fix step size
 
     # Training
-    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, 'SqueezeNet1_1_finetune', num_epochs)
+    train(model, dataloader_dict, dataset_size, criterion, optimizer_ft, exp_lr_scheduler, f'{name_model}_finetune', num_epochs)
 

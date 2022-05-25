@@ -92,13 +92,15 @@ if __name__ == '__main__':
     # Choose model
     # name_model = 'Densenet_161'
     # name_model = 'Resnet_152'
-    name_model = 'SqueezeNet1_1'
+    # name_model = 'SqueezeNet1_1'
+    name_model = 'Squeezenet_1_1_fix_finetune'
     label_type_color = ['bus_black', 'bus_green', 'bus_other', 'bus_red', 'bus_white',
                         'car_black', 'car_green', 'car_other', 'car_red', 'car_white',
                         'truck_black', 'truck_green', 'truck_other', 'truck_red', 'truck_white']
 
     # config link
-    path_to_folder_test = 'test/img_test/'
+    # path_to_folder_test = 'test/img_test/'
+    path_to_folder_test = 'test/tests/'
     path_to_weight_model = f'weights/best_model_loss_{name_model}.pth'
 
     # 1. type and color
@@ -132,10 +134,10 @@ if __name__ == '__main__':
                                  transforms.Normalize(mean, std)])
 
     # Predict and show type and color
-    # predict_and_show_type_and_color(path_to_folder_test)
+    predict_and_show_type_and_color(path_to_folder_test)
 
     # Predict and save type and color
-    predict_and_save_type_and_color(path_to_folder_test, path_to_save_img_type_color)
+    # predict_and_save_type_and_color(path_to_folder_test, path_to_save_img_type_color)
 
     # Predict and save type
     # predict_and_save_type(path_to_folder_test, path_to_save_img_type)

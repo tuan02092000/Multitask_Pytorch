@@ -124,7 +124,7 @@ class MultiOutputModel_2(torch.nn.Module):
 
         return y1o, y2o
     def model_core(self):
-        model_ft = models.resnet152(pretrained=True)  # Choose your model backbone
+        model_ft = models.resnet152(pretrained=False)  # Choose your model backbone
         for param in model_ft.parameters():
             param.requires_grad = False
         # Fine tuning
@@ -141,13 +141,13 @@ class MobileNetV3_BackBone(nn.Module):
 
         self.y1 = nn.Sequential(
             nn.Linear(in_features=576, out_features=1024, bias=True),
-            nn.Hardswish(),
+            nn.Hardswish(inplace=True),
             nn.Dropout(p=0.2, inplace=True),
             nn.Linear(in_features=1024, out_features=num_type, bias=True)
         )
         self.y2 = nn.Sequential(
             nn.Linear(in_features=576, out_features=1024, bias=True),
-            nn.Hardswish(),
+            nn.Hardswish(inplace=True),
             nn.Dropout(p=0.2, inplace=True),
             nn.Linear(in_features=1024, out_features=num_color, bias=True)
         )
@@ -155,13 +155,14 @@ class MobileNetV3_BackBone(nn.Module):
     def forward(self, x):
         x = self.base_model(x)
         x1 = self.avgpool(x)
-        x1 = x1.reshape(x1.size(0), -1)
+        # x1 = x1.reshape(x1.size(0), -1)
+        x1 = torch.flatten(x1, 1)
         out_type = self.y1(x1)
         out_color = self.y2(x1)
 
         return out_type, out_color
     def model_core(self):
-        model_ft = models.mobilenet_v3_small(pretrained=True).features  # Choose your model backbone
+        model_ft = models.mobilenet_v3_small(pretrained=False).features  # Choose your model backbone
         for param in model_ft.parameters():
             param.requires_grad = False
         return model_ft
@@ -203,7 +204,14 @@ class SqueezeNet_BackBone(nn.Module):
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(output_size=(1, 1)),
             nn.Flatten(),
-            nn.Linear(1000, num_type)
+            # nn.Linear(1000, num_type)
+            nn.Linear(1000, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.25),
+            nn.Linear(512, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(256, num_type)
             )
 
         self.y2 = nn.Sequential(
@@ -212,7 +220,14 @@ class SqueezeNet_BackBone(nn.Module):
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(output_size=(1, 1)),
             nn.Flatten(),
-            nn.Linear(1000, num_color)
+            # nn.Linear(1000, num_color)
+            nn.Linear(1000, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.25),
+            nn.Linear(512, 256),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(256, num_color)
             )
 
     def forward(self, x):
@@ -252,6 +267,37 @@ class Densenet_BackBone(nn.Module):
         model_ft.classifier = nn.Linear(num_ftrs, 512)
         return model_ft
 
+class Shufflenet_BackBone(nn.Module):
+    def __init__(self):
+        super(Shufflenet_BackBone, self).__init__()
+        self.base_model = self.model_core()
+        self.y1 = nn.Sequential(
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(1000, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(512, 3)
+        )
+        self.y2 = nn.Sequential(
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(1000, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(512, 5)
+        )
+    def forward(self, x):
+        x = self.base_model(x)
+        out_type = self.y1(x)
+        out_color = self.y2(x)
+        return out_type, out_color
+    def model_core(self):
+        model = models.shufflenet_v2_x0_5(pretrained=True)
+        for param in model.parameters():
+            param.requires_grad = False
+        return model
+
 class VGG_BackBone(nn.Module):
     def __init__(self):
         super(VGG_BackBone, self).__init__()
@@ -279,5 +325,5 @@ class VGG_BackBone(nn.Module):
         return model_ft
 
 if __name__ == '__main__':
-    model = models.densenet161()
-
+    model = models.shufflenet_v2_x2_0()
+    print(model)

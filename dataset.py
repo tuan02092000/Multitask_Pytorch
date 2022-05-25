@@ -12,7 +12,7 @@ def make_data_path_list(root_folder='dataset'):
         for img_name in os.listdir(folder_path):
             image = os.path.join(folder_path, img_name)
             img_path.append(image)
-            label = image.split('\\')[1].split('_')
+            label = image.split('/')[1].split('_')
             type.append(label[0])
             color.append(label[1])
     x_train, x_test = train_test_split(img_path, test_size=0.2, random_state=42)
