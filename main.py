@@ -112,7 +112,8 @@ if __name__ == '__main__':
         # Choose model
         # name_model = 'Densenet_161'
         # name_model = 'Resnet_152'
-        name_model = 'SqueezeNet1_1'
+        # name_model = 'SqueezeNet1_1'
+        name_model = 'Resnet_50'
 
         # Choose link
         path_to_folder_label = './test/my_test/'

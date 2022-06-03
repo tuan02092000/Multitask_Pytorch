@@ -24,6 +24,7 @@ def extract_label(label_list, pred_array, top_n=1):
 
 def predict_and_save_type_and_color(path_to_folder_test, path_to_save_img):
     test = listdir(path_to_folder_test)  # Link to test folder
+    # print(test)
     for i in test:
         image = image_loader(path_to_folder_test, i)
         read_img = path_to_folder_test + i
@@ -93,27 +94,31 @@ if __name__ == '__main__':
     # name_model = 'Densenet_161'
     # name_model = 'Resnet_152'
     # name_model = 'SqueezeNet1_1'
-    name_model = 'Squeezenet_1_1_fix_finetune'
+    # name_model = 'Squeezenet_1_1_fix_finetune'
+    name_model = 'SqueezeNet_1_1_25_5_2'
     label_type_color = ['bus_black', 'bus_green', 'bus_other', 'bus_red', 'bus_white',
                         'car_black', 'car_green', 'car_other', 'car_red', 'car_white',
                         'truck_black', 'truck_green', 'truck_other', 'truck_red', 'truck_white']
-
+    name_mp4 = NAME_MP4
     # config link
     # path_to_folder_test = 'test/img_test/'
-    path_to_folder_test = 'test/tests/'
+    path_to_folder_test = 'test/yolo_image/{}/'.format(name_mp4)
     path_to_weight_model = f'weights/best_model_loss_{name_model}.pth'
 
     # 1. type and color
-    path_to_save_img_type_color = f'test/predict_model_select/{name_model}/predict_save_img_type_color'
+    # path_to_save_img_type_color = f'test/predict_model_select/{name_model}/predict_save_img_type_color/{name_mp4}'
+    path_to_save_img_type_color = f'test/detect/{name_mp4}'
+    if not os.path.exists(path_to_save_img_type_color):
+        os.mkdir(path_to_save_img_type_color)
     # 2. type
     path_to_save_img_type = f'test/predict_model_select/{name_model}/predict_save_img_type'
     # 3. color
     path_to_save_img_color = f'test/predict_model_select/{name_model}/predict_save_img_color'
 
-    if not os.path.exists(f'test/predict_model_select/{name_model}'):
-        os.mkdir(f'test/predict_model_select/{name_model}')
-    if not os.path.exists(path_to_save_img_type_color):
-        os.mkdir(path_to_save_img_type_color)
+    # if not os.path.exists(f'test/predict_model_select/{name_model}'):
+    #     os.mkdir(f'test/predict_model_select/{name_model}')
+    # if not os.path.exists(path_to_save_img_type_color):
+    #     os.mkdir(path_to_save_img_type_color)
     for label in label_type_color:
         if not os.path.exists(f'{path_to_save_img_type_color}/{label}'):
             os.mkdir(f'{path_to_save_img_type_color}/{label}')
@@ -134,10 +139,10 @@ if __name__ == '__main__':
                                  transforms.Normalize(mean, std)])
 
     # Predict and show type and color
-    predict_and_show_type_and_color(path_to_folder_test)
+    # predict_and_show_type_and_color(path_to_folder_test)
 
     # Predict and save type and color
-    # predict_and_save_type_and_color(path_to_folder_test, path_to_save_img_type_color)
+    predict_and_save_type_and_color(path_to_folder_test, path_to_save_img_type_color)
 
     # Predict and save type
     # predict_and_save_type(path_to_folder_test, path_to_save_img_type)

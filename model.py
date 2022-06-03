@@ -1,3 +1,5 @@
+import torch
+
 from lib import *
 from config import *
 
@@ -167,31 +169,57 @@ class MobileNetV3_BackBone(nn.Module):
             param.requires_grad = False
         return model_ft
 
+# class Resnet_BackBone(nn.Module):
+#     def __init__(self):
+#         super(Resnet_BackBone, self).__init__()
+#
+#         self.base_model = self.model_core()
+#
+#         self.y1 = nn.Sequential(
+#             nn.Dropout(p=0.2),
+#             nn.Linear(in_features=512, out_features=num_type, bias=True),
+#         )
+#         self.y2 = nn.Sequential(
+#             nn.Dropout(p=0.2),
+#             nn.Linear(in_features=512, out_features=num_color, bias=True),
+#         )
+#
+#     def forward(self, x):
+#         x = self.base_model(x)
+#         x = torch.flatten(x, 1)
+#         out_type = self.y1(x)
+#         out_color = self.y2(x)
+#         return out_type, out_color
+#     def model_core(self):
+#         model_ft = models.resnet50(pretrained=True)  # Choose your model backbone
+#         # for param in model_ft.parameters():
+#         #     param.requires_grad = False
+#         model_wo_fc = nn.Sequential(*(list(model_ft.children())[:-1]))
+#         # num_ftrs = model_ft.fc.in_features
+#         # model_ft.fc = nn.Linear(num_ftrs, 512)
+#         return model_wo_fc
+
 class Resnet_BackBone(nn.Module):
     def __init__(self):
-        super(Resnet_BackBone, self).__init__()
-
-        self.base_model = self.model_core()
+        super().__init__()
+        self.resnet = models.resnet34(pretrained=True)
+        self.model_wo_fc = nn.Sequential(*(list(self.resnet.children())[:-1]))
 
         self.y1 = nn.Sequential(
-            nn.Linear(in_features=512, out_features=num_type, bias=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(in_features=512, out_features=num_type)
         )
         self.y2 = nn.Sequential(
-            nn.Linear(in_features=512, out_features=num_color, bias=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(in_features=512, out_features=num_color)
         )
-
     def forward(self, x):
-        x = self.base_model(x)
-        out_type = self.y1(x)
-        out_color = self.y2(x)
-        return out_type, out_color
-    def model_core(self):
-        model_ft = models.resnet152(pretrained=True)  # Choose your model backbone
-        for param in model_ft.parameters():
-            param.requires_grad = False
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, 512)
-        return model_ft
+        x = self.model_wo_fc(x)
+        x = torch.flatten(x, 1)
+        type = self.y1(x)
+        color = self.y2(x)
+        return type, color
+
 
 class SqueezeNet_BackBone(nn.Module):
     def __init__(self):
@@ -204,14 +232,14 @@ class SqueezeNet_BackBone(nn.Module):
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(output_size=(1, 1)),
             nn.Flatten(),
-            # nn.Linear(1000, num_type)
-            nn.Linear(1000, 512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.25),
-            nn.Linear(512, 256),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.5),
-            nn.Linear(256, num_type)
+            nn.Linear(1000, num_type)
+            # nn.Linear(1000, 512),
+            # nn.ReLU(inplace=True),
+            # nn.Dropout(0.25),
+            # nn.Linear(512, 256),
+            # nn.ReLU(inplace=True),
+            # nn.Dropout(0.5),
+            # nn.Linear(256, num_type)
             )
 
         self.y2 = nn.Sequential(
@@ -220,14 +248,14 @@ class SqueezeNet_BackBone(nn.Module):
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(output_size=(1, 1)),
             nn.Flatten(),
-            # nn.Linear(1000, num_color)
-            nn.Linear(1000, 512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.25),
-            nn.Linear(512, 256),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.5),
-            nn.Linear(256, num_color)
+            nn.Linear(1000, num_color)
+            # nn.Linear(1000, 512),
+            # nn.ReLU(inplace=True),
+            # nn.Dropout(0.25),
+            # nn.Linear(512, 256),
+            # nn.ReLU(inplace=True),
+            # nn.Dropout(0.5),
+            # nn.Linear(256, num_color)
             )
 
     def forward(self, x):
@@ -325,5 +353,14 @@ class VGG_BackBone(nn.Module):
         return model_ft
 
 if __name__ == '__main__':
-    model = models.shufflenet_v2_x2_0()
+    model = models.resnet34()
     print(model)
+    # for name, child in model.named_children():
+    #     print(name)
+    #     # print(child)
+    # print(model)
+    # resnet = models.resnet34(pretrained=True)
+    # print(list(resnet.children())[-3:])
+    # model_wo_fc = nn.Sequential(*(list(resnet.children())[:-1]))
+    # print(model_wo_fc)
+

@@ -136,13 +136,15 @@ def train(model, dataloader_dict : dict, dataset_size : dict, criterion, optimzi
     print('Best total loss: {:.4f}'.format(best_loss))
     print('Best val acc: {:4f}'.format(best_acc))
 
+    torch.save(model, os.path.join('weights', f'last_model_loss_{name_model}.pth'))
+
     # load best model weights
     # model_loss.load_state_dict(best_model_wts)
     # return model
 
 if __name__ == '__main__':
     # Name model
-    name_model = 'SqueezeNet_1_1_25_5'
+    name_model = 'Resnet_50_test_resize'
 
     # Dataset
     train_list, test_list = make_data_path_list('dataset_25_5')
@@ -159,7 +161,9 @@ if __name__ == '__main__':
     }
 
     # Model
-    model = SqueezeNet_BackBone()
+    model = Resnet_BackBone()
+    # checkpoint = torch.load('weights/best_model_loss_SqueezeNet1_1.pth')
+    # model.load_state_dict(checkpoint)
 
     # Loss function
     criterion = [nn.CrossEntropyLoss(), nn.CrossEntropyLoss()]
@@ -167,7 +171,7 @@ if __name__ == '__main__':
     # Optimizer
     optimizer = optim.Adam(
         [
-            {"params": model.base_model.parameters()},
+            {"params": model.model_wo_fc.parameters()},
             # {"params": model.avgpool.parameters(), "lr": lr_last},
             {"params": model.y1.parameters(), "lr": lr_last},
             {"params": model.y2.parameters(), "lr": lr_last},

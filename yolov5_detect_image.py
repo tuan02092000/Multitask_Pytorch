@@ -45,6 +45,7 @@ if __name__ == '__main__':
         x2 = int(coord[2].item())
         y2 = int(coord[3].item())
         crop_img = image[y1:y2, x1:x2]
+        cv2.imwrite('test/{}.jpg'.format(i), crop_img)
         
         img_pil = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
         img_pil = Image.fromarray(img_pil)

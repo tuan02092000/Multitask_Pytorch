@@ -10,39 +10,22 @@ def extract_label(label_list, pred_array, top_n=1):
     index = pred_max.cpu().numpy()
     return label_list[index.item()]
 
-def frame_vis_generator(frame, bboxes, ids):
+def frame_vis_generator(frame, bboxes, ids, count_frame):
     entity_id = 1
     # label_dict[entity_id][2] = 0
     # label_dict[entity_id][3] = 0
+
     for i, entity_id in enumerate(ids):
         x1, y1, w, h = np.round(bboxes[i]).astype(int)
         x2 = x1 + w
         y2 = y1 + h
-        #
-        # # convert to PIL image
-        # img_pil = frame[y1:y2, x1:x2]
-        # if img_pil.shape[0] == 0 or img_pil.shape[1] == 0:
-        #     continue
-        # img_pil = cv2.cvtColor(img_pil, cv2.COLOR_BGR2RGB)
-        # img_pil = Image.fromarray(img_pil)
-        # img_pil = test_loader(img_pil).float()
-        # img_pil = Variable(img_pil, requires_grad=False)
-        # img_pil = img_pil.unsqueeze(0).cuda()
-        #
-        # # Classifier
-        # y_pred = model_classify(img_pil)
-        # type_label = extract_label(type, y_pred[0])
-        # color_label = extract_label(color, y_pred[1])
-
-        # fix
-
-        if (entity_id not in label_dict.keys()) or (label_dict[entity_id][2] < 0.9) or (label_dict[entity_id][3] < 0.9):
+        if (entity_id not in label_dict.keys()) or count_frame % 20 == 0:
             # convert to PIL image
             img_pil = frame[y1:y2, x1:x2]
             if img_pil.shape[0] == 0 or img_pil.shape[1] == 0:
                 continue
             img_pil = cv2.cvtColor(img_pil, cv2.COLOR_BGR2RGB)
-            img_pil = Image.fromarray(img_pil)
+            # img_pil = Image.fromarray(img_pil)
             img_pil = test_loader(img_pil).float()
             img_pil = Variable(img_pil, requires_grad=False)
             img_pil = img_pil.unsqueeze(0).cuda()
@@ -57,10 +40,8 @@ def frame_vis_generator(frame, bboxes, ids):
             color_label = extract_label(color, y_pred[1])
 
             label_dict[entity_id] = [type_label, color_label, prob_max_type, prob_max_color]
-        # end fix
 
         text = f'{str(entity_id)}-{label_dict[entity_id][0]}-{label_dict[entity_id][1]}'
-
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), thickness=2)
         cv2.putText(frame, text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), thickness=2)
     return frame
@@ -105,18 +86,21 @@ if __name__ == '__main__':
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # Name model classifier
-    name_model = 'Shufflenet_v2_x2_0'
+    # name_model = 'SqueezeNet_1_1_25_5_2'
+    name_model = 'Resnet_50_test_resize'
 
     # Set path
     path_to_weight_model_classify = f'weights/best_model_loss_{name_model}.pth'
 
     # Image transform
-    test_loader = transforms.Compose([transforms.Resize((resize, resize)),
+    test_loader = transforms.Compose([
+                                 transforms.ToPILImage(),
+                                 transforms.Resize((resize, resize)),
                                  transforms.ToTensor(),
                                  transforms.Normalize(mean, std)])
 
     # Model classifier
-    model_classify = Shufflenet_BackBone()
+    model_classify = Resnet_BackBone()
     model_classify = model_classify.to(device)
     model_classify.load_state_dict(torch.load(path_to_weight_model_classify))
     model_classify.eval()
@@ -126,19 +110,21 @@ if __name__ == '__main__':
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='/home/nguyen-tuan/Documents/IVSR_LAB/weights/best_300epoch.pt')
     model.float()
     model.eval()
-    video_path = "/home/nguyen-tuan/Documents/IVSR_LAB/Multitask-classification/test/video_test/test.webm"
+    video_path = "/home/nguyen-tuan/Documents/IVSR_LAB/Multitask-classification/test/download_video/traffic_11.mp4"
     vid = cv2.VideoCapture(video_path)
     ret, image_show = vid.read()
     frame_height, frame_witdth, _ = image_show.shape
     ii = 0
-    out = cv2.VideoWriter(f"/home/nguyen-tuan/Documents/IVSR_LAB/Multitask-classification/test/video_test/yolo5s_bytetrack_loss_{name_model}_testwebm_300.avi", cv2.VideoWriter_fourcc('M','J','P','G'),10,(frame_witdth,frame_height))
+    out = cv2.VideoWriter(f"/home/nguyen-tuan/Documents/IVSR_LAB/Multitask-classification/test/video_test/yolo5s_bytetrack_{name_model}_traffic_11.avi", cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (frame_witdth, frame_height))
 
     # Dict save label with id
     label_dict = dict()
 
     # Read video
+    count_frame = 0
     while vid.isOpened():
         ret, frame = vid.read()
+        count_frame = count_frame + 1
         if not ret:
             break
         preds = model(frame)
@@ -158,10 +144,10 @@ if __name__ == '__main__':
                     online_tlwhs.append(tlwh)
                     online_ids.append(tid)
                     online_scores.append(t.score)
-        res_img = frame_vis_generator(frame, online_tlwhs, online_ids)
+        res_img = frame_vis_generator(frame, online_tlwhs, online_ids, count_frame)
         out.write(res_img.astype(np.uint8))
     out.release()
     vid.release()
     print("Done")
-    cv2.destroyAllWindows()
+   
 
